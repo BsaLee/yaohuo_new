@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛帖子列表</title>
+    <style>
+        .notice {
+            background-color: #ffc107;
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .post {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .title:hover {
+            text-decoration: underline;
+        }
+        .info {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="notice">采集妖火论坛新帖列表</div>
+    <div id="postsContainer"></div>
+
+    <script>
+        window.onload = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/xintie.php', true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var posts = JSON.parse(xhr.responseText);
+                    displayPosts(posts);
+                }
+            };
+            xhr.send();
+        };
+
+        function displayPosts(posts) {
+            var container = document.getElementById('postsContainer');
+            container.innerHTML = '';
+            posts.forEach(function(post) {
+                // 将 "zhuangtai": "已处理" 替换为 "zhuangtai": "采集完成"
+                if (post.zhuangtai === '已处理') {
+                    post.zhuangtai = '采集完成';
+                }
+                var postDiv = document.createElement('div');
+                postDiv.className = 'post';
+                var title = document.createElement('a');
+                title.className = 'title';
+                title.textContent = post.title;
+                title.href = '/neirong.html?id=' + post.id;
+                // 修改在当前窗口打开
+                title.target = '_self'; 
+                var info = document.createElement('div');
+                info.className = 'info';
+                info.innerHTML = '作者: ' + post.author + ' | 回复数: ' + post.replies + ' | 状态: ' + post.zhuangtai + '<br>发布时间: ' + post.time; // 在时间前添加换行
+                postDiv.appendChild(title);
+                postDiv.appendChild(info);
+                container.appendChild(postDiv);
+            });
+        }
+    </script>
+</body>
+</html>

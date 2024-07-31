@@ -1,8 +1,8 @@
 <?php
-$servername = "127.0.0.1";
-$username = "root";
-$password = "123456";
-$dbname = "root";
+$servername = "mysql_g2";
+$username = "xx";
+$password = "xx";
+$dbname = "xx";
 
 // 创建连接
 $conn = new mysqli($servername, $username, $password, $dbname);
